@@ -1,0 +1,20 @@
+digraph UnregisterService{
+rankdir=TB
+label="UnregisterService"
+labelloc=top
+labeljust=left
+fontcolor=blue
+node [style=filled]
+fontsize=30
+"v_RegisteredSuccessfully" [fillcolor=red]
+"v_BadPayloadException" [fillcolor=red]
+"v_RemoveServiceRegisteryEntry" [fillcolor=red]
+"v_ServiceNotExist" [fillcolor=red]
+"v_End" [fillcolor=red]
+"v_ServiceNotExist" -> "v_End" [ label="e_End" color="red" ]
+"v_RemoveServiceRegisteryEntry" -> "v_ServiceNotExist" [ label="e_QueeryRemovedService" color="red" ]
+"v_RegisteredSuccessfully" -> "v_RemoveServiceRegisteryEntry" [ label="e_ValedUnRegisterServiceForm" color="red" ]
+"v_BadPayloadException" -> "v_RegisteredSuccessfully" [ label="e_back_RegisterService" color="red" ]
+"v_RegisteredSuccessfully" -> "v_BadPayloadException" [ label="e_InvaledUnRegisterServiceForm" color="red" ]
+"v_Start" -> "v_RegisteredSuccessfully" [ label="e_RegisterNewService" color="black" ]
+}

@@ -1,0 +1,38 @@
+digraph OrchestrationStore{
+rankdir=TB
+label="OrchestrationStore"
+labelloc=top
+labeljust=left
+fontcolor=blue
+node [style=filled]
+fontsize=30
+"v_ServiceRegisteredProvider" [fillcolor=red]
+"v_ServiceRegisteredConsumer" [fillcolor=red]
+"v_AuthoenticationServiceAvailable" [fillcolor=red]
+"v_AuthorizationInterCloudReturned" [fillcolor=red]
+"v_BadPayloadException" [fillcolor=red]
+"v_CoreServiceAvailable" [fillcolor=red]
+"v_OrchestratorStoresRequestedParametersCreated" [fillcolor=red]
+"v_RequestedIdReturned" [fillcolor=red]
+"v_NoSuchOrchestratorStore" [fillcolor=red]
+"v_ReturnAllTopPriorityOrchestration" [fillcolor=red]
+"v_OrchestratorStoreRemoved" [fillcolor=red]
+"v_CouldNotRemoveOrchestratorStore" [fillcolor=red]
+"v_End" [fillcolor=red]
+"v_Start" -> "v_ServiceRegisteredProvider" [ label="e_RegisterNewService_provider" color="black" ]
+"v_OrchestratorStoreRemoved" -> "v_End" [ label="e_End" color="red" ]
+"v_CouldNotRemoveOrchestratorStore" -> "v_ReturnAllTopPriorityOrchestration" [ label="e_BackPriority" color="red" ]
+"v_ReturnAllTopPriorityOrchestration" -> "v_CouldNotRemoveOrchestratorStore" [ label="e_RemoveOrchestrationIdNotExist" color="red" ]
+"v_ReturnAllTopPriorityOrchestration" -> "v_OrchestratorStoreRemoved" [ label="e_RemoveOrchestrationIdExist" color="red" ]
+"v_RequestedIdReturned" -> "v_ReturnAllTopPriorityOrchestration" [ label="e_Query_AllTopPriority" color="red" ]
+"v_NoSuchOrchestratorStore" -> "v_OrchestratorStoresRequestedParametersCreated" [ label="e_BackOrchestratorStores" color="red" ]
+"v_OrchestratorStoresRequestedParametersCreated" -> "v_NoSuchOrchestratorStore" [ label="e_QueryOrchestratorStoreById_NotExists" color="red" ]
+"v_OrchestratorStoresRequestedParametersCreated" -> "v_RequestedIdReturned" [ label="e_QueryOrchestratorStoreById" color="red" ]
+"v_BadPayloadException" -> "v_CoreServiceAvailable" [ label="e_BackAuthorizationInterCloud" color="red" ]
+"v_CoreServiceAvailable" -> "v_BadPayloadException" [ label="e_CreateStoreWithBadPayload" color="red" ]
+"v_CoreServiceAvailable" -> "v_OrchestratorStoresRequestedParametersCreated" [ label="e_CreateStore" color="red" ]
+"v_AuthorizationInterCloudReturned" -> "v_CoreServiceAvailable" [ label="e_OrchestrationCoreSystemAvailabilty" color="red" ]
+"v_AuthoenticationServiceAvailable" -> "v_AuthorizationInterCloudReturned" [ label="e_RequestAuthroizationCliud" color="red" ]
+"v_ServiceRegisteredConsumer" -> "v_AuthoenticationServiceAvailable" [ label="e_AuthoneticationSystemAvailabilty" color="red" ]
+"v_ServiceRegisteredProvider" -> "v_ServiceRegisteredConsumer" [ label="e_RegisterNewService_Consumer" color="red" ]
+}

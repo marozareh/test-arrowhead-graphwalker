@@ -1,0 +1,18 @@
+digraph ServiceRegistry{
+rankdir=TB
+label="ServiceRegistry"
+labelloc=top
+labeljust=left
+fontcolor=blue
+node [style=filled]
+fontsize=30
+"v_ValidPayload" -> "v_end" [ label="e_SerrviceDefinationtExist" color="black" ]
+"v_SucessMesssage" -> "v_ValidPayload" [ label="e_back_ValidPayload" color="black" ]
+"v_QueryService" -> "v_SucessMesssage" [ label="e_NewServiceExist" color="black" ]
+"v_RegisteredService" -> "v_QueryService" [ label="e_SaveService" color="black" ]
+"v_ValidPayload" -> "v_RegisteredService" [ label="e_SerrviceDefinationNotExist" color="black" ]
+"v_RegisterService" -> "v_ValidPayload" [ label="e_validServiceRegisteryForm" color="black" ]
+"v_Start" -> "v_RegisterService" [ label="e_start" color="black" ]
+"v_BadPayloadException" -> "v_RegisterService" [ label="e_back_RegisterService" color="black" ]
+"v_RegisterService" -> "v_BadPayloadException" [ label="e_InvaledServiceRegisteryForm" color="black" ]
+}
