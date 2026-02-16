@@ -1,4 +1,4 @@
-com/mbtroads/test/Test_ServiceQuery.class
-com/mbtroads/tests/Test_UnRegisterService.class
-com/mbtroads/tests/Test_OrchestrationStore.class
-com/mbtroads/tests/Test_ServiceRegistry.class
+com/mbtroads/test/Test_ServiceRegistryNEW.class
+com/mbtroads/test/Test_ServiceQueryNEW.class
+com/mbtroads/test/Test_OrchestrationStoreNEW.class
+com/mbtroads/test/Test_UnRegisterServiceNEW.class

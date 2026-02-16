@@ -4,7 +4,7 @@ import com.mbtroads.core.BasePage;
 import com.mbtroads.core.ISystemProperties;
 import com.mbtroads.data.TestData;
 import com.mbtroads.http.HttpClient;
-import com.mbtroads.report.ExtentReport;
+import com.mbtroads.report.ExtentReportNEW;
 import graphwalker.OrchestrationStore;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -42,7 +42,7 @@ public class OrchStore extends BasePage
 
     @Override
     public void v_Start() {
-        ExtentReport.createAndGetNodeInstance("in Running: v_Start");
+        ExtentReportNEW.createAndGetNodeInstance("in Running: v_Start");
     }
 
     /* =========================================================
@@ -52,7 +52,7 @@ public class OrchStore extends BasePage
     @Override
     public void e_RegisterNewService_provider() {
 
-        ExtentReport.createAndGetNodeInstance("Moving Through: e_RegisterNewService_provider");
+        ExtentReportNEW.createAndGetNodeInstance("Moving Through: e_RegisterNewService_provider");
         infoReport("Running /serviceregistry/mgmt (provider)");
 
         response = httpClient.sendPost_Query(NewService, "mgmt");
@@ -61,6 +61,10 @@ public class OrchStore extends BasePage
             content_p = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content_p);
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Register Provider")
+                    .fail("POST /serviceregistry/mgmt failed (provider)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
 
@@ -73,7 +77,7 @@ public class OrchStore extends BasePage
 
     @Override
     public void v_ServiceRegisteredProvider() {
-        ExtentReport.createAndGetNodeInstance("v_ServiceRegisteredProvider");
+        ExtentReportNEW.createAndGetNodeInstance("v_ServiceRegisteredProvider");
         assestEqual("201", String.valueOf(response.getStatusLine().getStatusCode()));
     }
 
@@ -84,7 +88,7 @@ public class OrchStore extends BasePage
     @Override
     public void e_RegisterNewService_Consumer() {
 
-        ExtentReport.createAndGetNodeInstance("Moving Through: e_RegisterNewService_Consumer");
+        ExtentReportNEW.createAndGetNodeInstance("Moving Through: e_RegisterNewService_Consumer");
         infoReport("Running /serviceregistry/mgmt (consumer)");
 
         response = httpClient.sendPost_Query(NewServiceConsumer, "mgmt");
@@ -93,6 +97,10 @@ public class OrchStore extends BasePage
             content_c = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content_c);
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Register Consumer")
+                    .fail("POST /serviceregistry/mgmt failed (consumer)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
 
@@ -109,7 +117,7 @@ public class OrchStore extends BasePage
 
     @Override
     public void v_ServiceRegisteredConsumer() {
-        ExtentReport.createAndGetNodeInstance("v_ServiceRegisteredConsumer");
+        ExtentReportNEW.createAndGetNodeInstance("v_ServiceRegisteredConsumer");
         assestEqual("201", String.valueOf(response.getStatusLine().getStatusCode()));
     }
 
@@ -120,20 +128,24 @@ public class OrchStore extends BasePage
     @Override
     public void e_AuthoneticationSystemAvailabilty() {
 
-        ExtentReport.createAndGetNodeInstance("e_AuthoneticationSystemAvailabilty");
+        ExtentReportNEW.createAndGetNodeInstance("e_AuthoneticationSystemAvailabilty");
         response = httpClient.ServiceAvailable("authontication");
 
         try {
             content = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content);
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Authentication Availability")
+                    .fail("GET /authontication failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void v_AuthoenticationServiceAvailable() {
-        ExtentReport.createAndGetNodeInstance("v_AuthoenticationServiceAvailable");
+        ExtentReportNEW.createAndGetNodeInstance("v_AuthoenticationServiceAvailable");
         assestEqual("200", String.valueOf(response.getStatusLine().getStatusCode()));
         assestContains("Got it!", content);
     }
@@ -145,7 +157,7 @@ public class OrchStore extends BasePage
     @Override
     public void e_RequestAuthroizationCliud() {
 
-        ExtentReport.createAndGetNodeInstance("e_RequestAuthroizationCliud");
+        ExtentReportNEW.createAndGetNodeInstance("e_RequestAuthroizationCliud");
 
         consumer_request =
                 "{ \"consumerId\": " + id_c +
@@ -161,13 +173,17 @@ public class OrchStore extends BasePage
             content = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content);
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Request Authorization")
+                    .fail("POST /requesrauth failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void v_AuthorizationInterCloudReturned() {
-        ExtentReport.createAndGetNodeInstance("v_AuthorizationInterCloudReturned");
+        ExtentReportNEW.createAndGetNodeInstance("v_AuthorizationInterCloudReturned");
         assestEqual("201", String.valueOf(response.getStatusLine().getStatusCode()));
         assestContains("consumer", content);
         assestContains(id_c, content);
@@ -180,19 +196,23 @@ public class OrchStore extends BasePage
     @Override
     public void e_OrchestrationCoreSystemAvailabilty() {
 
-        ExtentReport.createAndGetNodeInstance("e_OrchestrationCoreSystemAvailabilty");
+        ExtentReportNEW.createAndGetNodeInstance("e_OrchestrationCoreSystemAvailabilty");
         response = httpClient.ServiceAvailable("orchestration");
 
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Orchestration Availability")
+                    .fail("GET /orchestration failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void v_CoreServiceAvailable() {
-        ExtentReport.createAndGetNodeInstance("v_CoreServiceAvailable");
+        ExtentReportNEW.createAndGetNodeInstance("v_CoreServiceAvailable");
         if (flag) {
             assestEqual("200", String.valueOf(response.getStatusLine().getStatusCode()));
             assestContains("Got it!", content);
@@ -206,7 +226,7 @@ public class OrchStore extends BasePage
     @Override
     public void e_CreateStoreWithBadPayload() {
 
-        ExtentReport.createAndGetNodeInstance("e_CreateStoreWithBadPayload");
+        ExtentReportNEW.createAndGetNodeInstance("e_CreateStoreWithBadPayload");
 
         store_request =
                 "[ { \"cloud\": { \"authenticationInfo\": null, \"gatekeeperRelayIds\": [ 0 ], " +
@@ -222,13 +242,17 @@ public class OrchStore extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Create Store Bad Payload")
+                    .fail("POST /createstore failed (bad payload)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void v_BadPayloadException() {
-        ExtentReport.createAndGetNodeInstance("v_BadPayloadException");
+        ExtentReportNEW.createAndGetNodeInstance("v_BadPayloadException");
         assestEqual("400", String.valueOf(response.getStatusLine().getStatusCode()));
     }
 
@@ -244,7 +268,7 @@ public class OrchStore extends BasePage
     @Override
     public void e_CreateStore() {
 
-        ExtentReport.createAndGetNodeInstance("e_CreateStore");
+        ExtentReportNEW.createAndGetNodeInstance("e_CreateStore");
 
         store_request =
                 "[ { \"cloud\": { \"authenticationInfo\": \"default-insecure-cloud\", " +
@@ -263,6 +287,10 @@ public class OrchStore extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Create Store")
+                    .fail("POST /createstore failed (valid payload)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
 
@@ -272,7 +300,7 @@ public class OrchStore extends BasePage
 
     @Override
     public void v_OrchestratorStoresRequestedParametersCreated() {
-        ExtentReport.createAndGetNodeInstance("v_OrchestratorStoresRequestedParametersCreated");
+        ExtentReportNEW.createAndGetNodeInstance("v_OrchestratorStoresRequestedParametersCreated");
         if (flag) {
             assestEqual("200", String.valueOf(response.getStatusLine().getStatusCode()));
         }
@@ -290,6 +318,10 @@ public class OrchStore extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Query Store Not Exists")
+                    .fail("GET /store/{id} failed (not exists)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -313,6 +345,10 @@ public class OrchStore extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Query Store By Id")
+                    .fail("GET /store/{id} failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -334,6 +370,10 @@ public class OrchStore extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Query All Top Priority")
+                    .fail("GET /storepriority failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
 
@@ -355,6 +395,10 @@ public class OrchStore extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Delete Store Not Exists")
+                    .fail("DELETE /store/{id} failed (not exists)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -377,6 +421,10 @@ public class OrchStore extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Delete Store")
+                    .fail("DELETE /store/{id} failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -392,11 +440,11 @@ public class OrchStore extends BasePage
 
     @Override
     public void e_End() {
-        ExtentReport.createAndGetNodeInstance("e_End");
+        ExtentReportNEW.createAndGetNodeInstance("e_End");
     }
 
     @Override
     public void v_End() {
-        ExtentReport.createAndGetNodeInstance("v_End");
+        ExtentReportNEW.createAndGetNodeInstance("v_End");
     }
 }

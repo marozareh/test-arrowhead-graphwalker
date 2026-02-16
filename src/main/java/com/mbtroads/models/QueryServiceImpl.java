@@ -4,7 +4,7 @@ import com.mbtroads.core.BasePage;
 import com.mbtroads.core.ISystemProperties;
 import com.mbtroads.data.TestData;
 import com.mbtroads.http.HttpClient;
-import com.mbtroads.report.ExtentReport;
+import com.mbtroads.report.ExtentReportNEW;
 import graphwalker.SericeQuery;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -50,8 +50,9 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(entity);
         } catch (IOException e) {
-            ExtentReport.node.fail("Service has a problem");
-            throw new RuntimeException(e);
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Service Available")
+                    .fail("GET /serviceregistry/echo failed")
+                    .fail(e.getMessage());            throw new RuntimeException(e);
         }
     }
 
@@ -81,6 +82,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Invalid Query")
+                    .fail("POST /serviceregistry/query failed (invalid payload)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -115,6 +120,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Valid Query")
+                    .fail("POST /serviceregistry/query failed (valid payload)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -147,6 +156,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Interface Not Defined")
+                    .fail("POST /serviceregistry/query failed (interface filter)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -171,6 +184,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Interface Defined")
+                    .fail("POST /serviceregistry/query failed (interface defined)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -198,6 +215,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Security Type Not Defined")
+                    .fail("POST /serviceregistry/query failed (security undefined)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -217,6 +238,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Security Type Defined")
+                    .fail("POST /serviceregistry/query failed (security defined)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -244,6 +269,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Version Not Defined")
+                    .fail("POST /serviceregistry/query failed (version undefined)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -267,6 +296,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Version Defined")
+                    .fail("POST /serviceregistry/query failed (version defined)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -294,6 +327,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Metadata Not Defined")
+                    .fail("POST /serviceregistry/query failed (metadata undefined)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -317,6 +354,11 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Metadata Defined")
+                    .fail("POST /serviceregistry/query failed (metadata defined)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -344,6 +386,10 @@ public class QueryServiceImpl extends BasePage
         try {
             content = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Ping Provider")
+                    .fail("POST /serviceregistry/query failed (ping providers)")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }

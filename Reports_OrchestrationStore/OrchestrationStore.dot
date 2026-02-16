@@ -1,0 +1,34 @@
+digraph OrchestrationStore {
+rankdir=LR;
+node [shape=box style=filled];
+"v_Start" [fillcolor=lightblue];
+"v_ServiceRegisteredProvider" [fillcolor=lightblue];
+"v_ServiceRegisteredConsumer" [fillcolor=lightblue];
+"v_AuthoenticationServiceAvailable" [fillcolor=lightblue];
+"v_AuthorizationInterCloudReturned" [fillcolor=lightblue];
+"v_BadPayloadException" [fillcolor=lightblue];
+"v_CoreServiceAvailable" [fillcolor=lightblue];
+"v_OrchestratorStoresRequestedParametersCreated" [fillcolor=lightblue];
+"v_RequestedIdReturned" [fillcolor=lightblue];
+"v_NoSuchOrchestratorStore" [fillcolor=lightblue];
+"v_ReturnAllTopPriorityOrchestration" [fillcolor=lightblue];
+"v_OrchestratorStoreRemoved" [fillcolor=lightblue];
+"v_CouldNotRemoveOrchestratorStore" [fillcolor=lightblue];
+"v_End" [fillcolor=lightblue];
+"v_ServiceRegisteredProvider" -> "v_ServiceRegisteredConsumer" [label="e_RegisterNewService_Consumer" color="black"];
+"v_ServiceRegisteredConsumer" -> "v_AuthoenticationServiceAvailable" [label="e_AuthoneticationSystemAvailabilty" color="black"];
+"v_AuthoenticationServiceAvailable" -> "v_AuthorizationInterCloudReturned" [label="e_RequestAuthroizationCliud" color="black"];
+"v_AuthorizationInterCloudReturned" -> "v_CoreServiceAvailable" [label="e_OrchestrationCoreSystemAvailabilty" color="black"];
+"v_CoreServiceAvailable" -> "v_OrchestratorStoresRequestedParametersCreated" [label="e_CreateStore" color="black"];
+"v_CoreServiceAvailable" -> "v_BadPayloadException" [label="e_CreateStoreWithBadPayload" color="black"];
+"v_BadPayloadException" -> "v_CoreServiceAvailable" [label="e_BackAuthorizationInterCloud" color="black"];
+"v_OrchestratorStoresRequestedParametersCreated" -> "v_RequestedIdReturned" [label="e_QueryOrchestratorStoreById" color="black"];
+"v_OrchestratorStoresRequestedParametersCreated" -> "v_NoSuchOrchestratorStore" [label="e_QueryOrchestratorStoreById_NotExists" color="black"];
+"v_NoSuchOrchestratorStore" -> "v_OrchestratorStoresRequestedParametersCreated" [label="e_BackOrchestratorStores" color="black"];
+"v_RequestedIdReturned" -> "v_ReturnAllTopPriorityOrchestration" [label="e_Query_AllTopPriority" color="black"];
+"v_ReturnAllTopPriorityOrchestration" -> "v_OrchestratorStoreRemoved" [label="e_RemoveOrchestrationIdExist" color="black"];
+"v_ReturnAllTopPriorityOrchestration" -> "v_CouldNotRemoveOrchestratorStore" [label="e_RemoveOrchestrationIdNotExist" color="black"];
+"v_CouldNotRemoveOrchestratorStore" -> "v_ReturnAllTopPriorityOrchestration" [label="e_BackPriority" color="black"];
+"v_OrchestratorStoreRemoved" -> "v_End" [label="e_End" color="black"];
+"v_Start" -> "v_ServiceRegisteredProvider" [label="e_RegisterNewService_provider" color="black"];
+}

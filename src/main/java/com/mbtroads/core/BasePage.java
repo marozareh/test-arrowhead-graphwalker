@@ -1,138 +1,135 @@
 package com.mbtroads.core;
 
-import com.mbtroads.report.ExtentReport;
+import com.mbtroads.report.ExtentReportNEW;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.junit.Assert;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class BasePage extends ExecutionContext {
 
+    // 🔥 GLOBAL FAILED STORAGE
+    public static Set<String> failedVertices = new HashSet<>();
+    public static Set<String> failedEdges = new HashSet<>();
+
     public void StrSplit(String strMain, int result) {
+
+        failedVertices.clear();
+        failedEdges.clear();
 
         String[] arrSplit = strMain.split(",");
         int i = 1;
         int firstVertex = 0;
         int firstEdge = 0;
 
-        String[] summaryReport = new String[30];
-        String[] summaryTest = new String[]{
-                "totalNumberOfModels",
-                "totalFailedNumberOfModels",
-                "totalIncompleteNumberOfModels",
-                "totalCompletedNumberOfModels",
-                "totalNotExecutedNumberOfModels",
-                "totalNumberOfEdges",
-                "totalNumberOfVisitedEdges",
-                "totalNumberOfUnvisitedEdges",
-                "edgeCoverage",
-                "totalNumberOfVertices",
-                "totalNumberOfVisitedVertices",
-                "totalNumberOfUnvisitedVertices",
-                "vertexCoverage",
-        };
+        ExtentReportNEW.createAndGetNodeInstance("GraphWalker Result Summary");
 
-        int summaryCount = 0;
-
-        if (result == 1) {
-            ExtentReport.createAndGetNodeInstance("GraphWalker Result PASS");
+        if (result == 0) {
+            ExtentReportNEW.node.pass("Model executed successfully");
         } else {
-            ExtentReport.createAndGetNodeInstance("GraphWalker Result Summary");
-            ExtentReport.node.fail("Error in the Model");
+            ExtentReportNEW.node.fail("Error in the Model");
         }
 
         while (i < arrSplit.length) {
 
-            if (result == 1) {
-                ExtentReport.node.pass(arrSplit[i]);
-            } else if (arrSplit[i].contains("vertexName")) {
+            if (result == 0) {
+
+                ExtentReportNEW.node.pass(arrSplit[i]);
+
+            }
+            else if (arrSplit[i].contains("vertexName")) {
 
                 if (firstVertex == 0) {
-                    ExtentReport.node.fail("=============> Failed Vertices <=============");
+                    ExtentReportNEW.node.fail("=============> Failed Vertices <=============");
                     firstVertex = 1;
                 }
 
                 String temp = arrSplit[i]
+                        .replace("\"vertexName\":\"", "")
+                        .replace("\"", "")
                         .replace("}", "")
-                        .replace("]", "");
-                ExtentReport.node.fail(temp);
-                i++;
+                        .replace("]", "")
+                        .trim();
 
-            } else if (arrSplit[i].contains("edgeId")) {
+                // 🔥 REMOVE "vertexName: " PREFIX IF EXISTS
+                if (temp.contains(":")) {
+                    temp = temp.substring(temp.indexOf(":") + 1).trim();
+                }
+
+                ExtentReportNEW.node.fail(temp);
+
+                failedVertices.add(temp);
+
+                i++;
+            }
+            else if (arrSplit[i].contains("edgeId")) {
 
                 if (firstEdge == 0) {
-                    ExtentReport.node.fail("=============> Failed Edges <=============");
+                    ExtentReportNEW.node.fail("=============> Failed Edges <=============");
                     firstEdge = 1;
                 }
 
                 String temp = arrSplit[i + 1]
+                        .replace("\"edgeName\":\"", "")
+                        .replace("\"", "")
                         .replace("}", "")
-                        .replace("]", "");
-                ExtentReport.node.fail(temp);
-                i++;
+                        .replace("]", "")
+                        .trim();
 
-            } else if (!arrSplit[i].contains("modelName")) {
-                summaryReport[summaryCount++] = arrSplit[i];
+                // 🔥 REMOVE "edgeName: " PREFIX IF EXISTS
+                if (temp.contains(":")) {
+                    temp = temp.substring(temp.indexOf(":") + 1).trim();
+                }
+
+                ExtentReportNEW.node.fail(temp);
+
+                failedEdges.add(temp);
+
+                i++;
             }
 
             i++;
-        }
-
-        if (result == 0) {
-            ExtentReport.node.fail("=============> Failed Summary <=============");
-
-            for (int j = 0; j < summaryCount; j++) {
-                summaryReport[j] = summaryReport[j]
-                        .replace("\"", "")
-                        .replace("}", "");
-            }
-
-            for (String key : summaryTest) {
-                for (int j = 0; j < summaryCount; j++) {
-                    if (summaryReport[j].trim().contains(key)) {
-                        ExtentReport.node.fail(summaryReport[j]);
-                        break;
-                    }
-                }
-            }
         }
     }
 
     public void assestEqual(String expectedValue, String actualValue) {
         try {
             assertEquals(expectedValue, actualValue);
-            ExtentReport.node.pass("Assertion Equal OK: " + expectedValue);
+            ExtentReportNEW.node.pass("Assertion Equal OK: " + expectedValue);
         } catch (AssertionError e) {
-            ExtentReport.node.fail("Assertion Equal FAILED: " + expectedValue);
-            throw new CustomException(e);
+            ExtentReportNEW.node.fail("Assertion Equal FAILED: " + expectedValue);
+            throw e;
         }
     }
 
     public void assestContains(String expectedValue, String actualValue) {
         try {
             Assert.assertTrue(actualValue.contains(expectedValue));
-            ExtentReport.node.pass("Assertion Contains OK: " + expectedValue);
+            ExtentReportNEW.node.pass("Assertion Contains OK: " + expectedValue);
         } catch (AssertionError e) {
-            ExtentReport.node.fail("Assertion Contains FAILED: " + expectedValue);
-            throw new CustomException(e);
+            ExtentReportNEW.node.fail("Assertion Contains FAILED: " + expectedValue);
+            throw e;
         }
     }
 
     public void assestdonotContains(String expectedValue, String actualValue) {
         try {
             Assert.assertFalse(actualValue.contains(expectedValue));
-            ExtentReport.node.pass("Assertion Not-Contains OK: " + expectedValue);
+            ExtentReportNEW.node.pass("Assertion Not-Contains OK: " + expectedValue);
         } catch (AssertionError e) {
-            ExtentReport.node.fail("Assertion Not-Contains FAILED: " + expectedValue);
-            throw new CustomException(e);
+            ExtentReportNEW.node.fail("Assertion Not-Contains FAILED: " + expectedValue);
+            throw e;
         }
     }
 
     public void infoReport(String info) {
-        ExtentReport.node.info(info);
+        ExtentReportNEW.node.info(info);
     }
 
     public void extendReport(String info) {
-        ExtentReport.createAndGetNodeInstance(info);
+        ExtentReportNEW.createAndGetNodeInstance(info);
     }
 }

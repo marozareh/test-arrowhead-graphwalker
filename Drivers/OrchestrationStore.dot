@@ -6,7 +6,6 @@ labeljust=left
 fontcolor=blue
 node [style=filled]
 fontsize=30
-"v_ServiceRegisteredProvider" [fillcolor=red]
 "v_ServiceRegisteredConsumer" [fillcolor=red]
 "v_AuthoenticationServiceAvailable" [fillcolor=red]
 "v_AuthorizationInterCloudReturned" [fillcolor=red]
