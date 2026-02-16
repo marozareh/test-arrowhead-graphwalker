@@ -4,7 +4,7 @@ import com.mbtroads.core.BasePage;
 import com.mbtroads.core.ISystemProperties;
 import com.mbtroads.data.TestData;
 import com.mbtroads.http.HttpClient;
-import com.mbtroads.report.ExtentReport;
+import com.mbtroads.report.ExtentReportNEW;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.graphwalker.java.annotation.GraphWalker;
@@ -30,7 +30,7 @@ public class UnregService extends BasePage
 
     @Override
     public void v_Start() {
-        ExtentReport.createAndGetNodeInstance("in Running: v_Start");
+        ExtentReportNEW.createAndGetNodeInstance("in Running: v_Start");
     }
 
     /* =========================================================
@@ -40,15 +40,21 @@ public class UnregService extends BasePage
     @Override
     public void e_RegisterNewService() {
 
-        ExtentReport.createAndGetNodeInstance("Moving Through: e_RegisterNewService");
+        ExtentReportNEW.createAndGetNodeInstance("Moving Through: e_RegisterNewService");
         infoReport("POST /serviceregistry/mgmt (register)");
 
-        response = httpClient.sendPost_Query(NewService, "mgmt");
-
         try {
+            response = httpClient.sendPost_Query(NewService, "mgmt");
+
             content = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content);
-        } catch (IOException e) {
+
+        } catch (Exception e) {
+
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Register Service")
+                    .fail("POST /serviceregistry/mgmt failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
 
@@ -61,7 +67,8 @@ public class UnregService extends BasePage
 
     @Override
     public void v_RegisteredSuccessfully() {
-        ExtentReport.createAndGetNodeInstance("v_RegisteredSuccessfully");
+        ExtentReportNEW.createAndGetNodeInstance("v_RegisteredSuccessfully");
+
         if (flag) {
             assestEqual("201", String.valueOf(response.getStatusLine().getStatusCode()));
         }
@@ -74,22 +81,29 @@ public class UnregService extends BasePage
     @Override
     public void e_InvaledUnRegisterServiceForm() {
 
-        ExtentReport.createAndGetNodeInstance("e_InvaledUnRegisterServiceForm");
+        ExtentReportNEW.createAndGetNodeInstance("e_InvaledUnRegisterServiceForm");
         infoReport("DELETE /serviceregistry/unregister (invalid)");
 
-        response = httpClient.DeleteServise(UnregisterService, "serviceregistry");
-
         try {
+
+            response = httpClient.DeleteServise(UnregisterService, "serviceregistry");
             content = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content);
-        } catch (IOException e) {
+
+        } catch (Exception e) {
+
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Invalid Unregister")
+                    .fail("DELETE /serviceregistry/unregister failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void v_BadPayloadException() {
-        infoReport("Validating v_BadPayloadException");
+
+        ExtentReportNEW.createAndGetNodeInstance("v_BadPayloadException");
 
         assestEqual("400", String.valueOf(response.getStatusLine().getStatusCode()));
         assestContains("INVALID_PARAMETER", content);
@@ -107,15 +121,21 @@ public class UnregService extends BasePage
     @Override
     public void e_ValedUnRegisterServiceForm() {
 
-        ExtentReport.createAndGetNodeInstance("e_ValedUnRegisterServiceForm");
+        ExtentReportNEW.createAndGetNodeInstance("e_ValedUnRegisterServiceForm");
         infoReport("DELETE /serviceregistry/unregister (valid)");
 
-        response = httpClient.DeleteServise(registerService + ServiceName, "serviceregistry");
-
         try {
+
+            response = httpClient.DeleteServise(registerService + ServiceName, "serviceregistry");
             content = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content);
-        } catch (IOException e) {
+
+        } catch (Exception e) {
+
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Valid Unregister")
+                    .fail("DELETE /serviceregistry/unregister failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -123,7 +143,7 @@ public class UnregService extends BasePage
     @Override
     public void v_RemoveServiceRegisteryEntry() {
 
-        ExtentReport.createAndGetNodeInstance("v_RemoveServiceRegisteryEntry");
+        ExtentReportNEW.createAndGetNodeInstance("v_RemoveServiceRegisteryEntry");
         infoReport("failCase flag = " + HttpClient.failCase_Test);
 
         if (HttpClient.failCase_Test.equals("false")) {
@@ -140,15 +160,21 @@ public class UnregService extends BasePage
     @Override
     public void e_QueeryRemovedService() {
 
-        ExtentReport.createAndGetNodeInstance("e_QueeryRemovedService");
+        ExtentReportNEW.createAndGetNodeInstance("e_QueeryRemovedService");
         infoReport("GET /serviceregistry/mgmt/" + id);
 
-        response = httpClient.sendGet(id, "serviceregistry");
-
         try {
+
+            response = httpClient.sendGet(id, "serviceregistry");
             content = EntityUtils.toString(response.getEntity());
             infoReport("Response = " + content);
-        } catch (IOException e) {
+
+        } catch (Exception e) {
+
+            ExtentReportNEW.createAndGetNodeInstance("HTTP FAILURE - Query Removed Service")
+                    .fail("GET /serviceregistry/mgmt failed")
+                    .fail(e.getMessage());
+
             throw new RuntimeException(e);
         }
     }
@@ -156,7 +182,8 @@ public class UnregService extends BasePage
     @Override
     public void v_ServiceNotExist() {
 
-        ExtentReport.createAndGetNodeInstance("v_ServiceNotExist");
+        ExtentReportNEW.createAndGetNodeInstance("v_ServiceNotExist");
+
         assestEqual("400", String.valueOf(response.getStatusLine().getStatusCode()));
         assestContains("does not exist", content);
     }
@@ -167,11 +194,11 @@ public class UnregService extends BasePage
 
     @Override
     public void e_End() {
-        ExtentReport.createAndGetNodeInstance("e_End");
+        ExtentReportNEW.createAndGetNodeInstance("e_End");
     }
 
     @Override
     public void v_End() {
-        ExtentReport.createAndGetNodeInstance("v_End");
+        ExtentReportNEW.createAndGetNodeInstance("v_End");
     }
 }

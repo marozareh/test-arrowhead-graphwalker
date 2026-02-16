@@ -1,10 +1,8 @@
 package com.mbtroads.core;
 
-import com.mbtroads.report.ExtentReport;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -17,40 +15,25 @@ public abstract class BaseTest extends BasePage implements ISystemProperties {
 
     protected static WebDriver driver;
 
-    @BeforeClass
-    public static void beforeAllTests() {
-
-        ExtentReport.createReportInstance(
-                currentDir + pathSeperator + "Reports" +
-                        pathSeperator + "Report_1.html"
-        );
-
-        ExtentReport.createTestInstance("Test Environment Preparation");
-
-        try {
-            FileUtils.cleanDirectory(
-                    new File(currentDir + pathSeperator + "Reports")
-            );
-        } catch (Exception e) {
-            ExtentReport.node.fail(e);
-        }
-    }
+    /* =========================================================
+       NO AUTOMATIC REPORT CREATION HERE
+       Each test class creates its own report
+       ========================================================= */
 
     @Before
     public void beforeEachTest() {
-        ExtentReport.createTestInstance(
-                System.getProperty("test")
-        );
+        // Nothing here anymore
+        // Report initialization is handled inside each test class
     }
 
     @AfterClass
     public static void afterAllTests() {
-        ExtentReport.flushReport();
-        // driver.quit();   // intentionally preserved as commented
+        // Nothing here
+        // Report flushing is handled inside each test class
     }
 
     /* =========================================================
-       SCREENSHOT SUPPORT (used by ExtentReport)
+       SCREENSHOT SUPPORT
        ========================================================= */
 
     public static String getScreenshotAsString() throws IOException {

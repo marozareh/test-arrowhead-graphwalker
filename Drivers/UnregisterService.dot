@@ -6,7 +6,6 @@ labeljust=left
 fontcolor=blue
 node [style=filled]
 fontsize=30
-"v_RegisteredSuccessfully" [fillcolor=red]
 "v_BadPayloadException" [fillcolor=red]
 "v_RemoveServiceRegisteryEntry" [fillcolor=red]
 "v_ServiceNotExist" [fillcolor=red]

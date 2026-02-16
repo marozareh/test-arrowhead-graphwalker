@@ -1,7 +1,6 @@
 package com.mbtroads.http;
 
 import com.mbtroads.core.ISystemProperties;
-import com.mbtroads.report.ExtentReport;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -9,8 +8,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-
-import java.io.IOException;
 
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
@@ -72,9 +69,8 @@ public class HttpClient implements ISystemProperties {
 
     public HttpResponse ServiceAvailable(String serviceName) {
 
-        HttpResponse response;
-
         try {
+
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request;
 
@@ -89,14 +85,11 @@ public class HttpClient implements ISystemProperties {
             request.setHeader("Accept", "application/json");
             request.setHeader("Content-type", "application/json");
 
-            response = httpClient.execute(request);
+            return httpClient.execute(request);
 
         } catch (Exception e) {
-            ExtentReport.node.fail("Service availability check failed");
-            throw new RuntimeException(e);
+            throw new RuntimeException("Service availability check failed", e);
         }
-
-        return response;
     }
 
     /* ============================
@@ -105,9 +98,8 @@ public class HttpClient implements ISystemProperties {
 
     public HttpResponse sendGet_All(String type) {
 
-        HttpResponse response;
-
         try {
+
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request;
 
@@ -124,21 +116,17 @@ public class HttpClient implements ISystemProperties {
             request.setHeader("Accept", "application/json");
             request.setHeader("Content-type", "application/json");
 
-            response = httpClient.execute(request);
+            return httpClient.execute(request);
 
         } catch (Exception e) {
-            ExtentReport.node.fail("GET ALL request failed");
-            throw new RuntimeException(e);
+            throw new RuntimeException("GET ALL request failed", e);
         }
-
-        return response;
     }
 
     public HttpResponse sendGet(String id, String type) {
 
-        HttpResponse response;
-
         try {
+
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request;
 
@@ -155,14 +143,11 @@ public class HttpClient implements ISystemProperties {
             request.setHeader("Accept", "application/json");
             request.setHeader("Content-type", "application/json");
 
-            response = httpClient.execute(request);
+            return httpClient.execute(request);
 
         } catch (Exception e) {
-            ExtentReport.node.fail("GET request failed");
-            throw new RuntimeException(e);
+            throw new RuntimeException("GET request failed", e);
         }
-
-        return response;
     }
 
     /* ============================
@@ -171,9 +156,8 @@ public class HttpClient implements ISystemProperties {
 
     public HttpResponse sendPost_Query(String payload, String type) {
 
-        HttpResponse response;
-
         try {
+
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost request;
 
@@ -190,14 +174,11 @@ public class HttpClient implements ISystemProperties {
             request.setHeader("Content-type", "application/json");
             request.setEntity(new StringEntity(payload));
 
-            response = httpClient.execute(request);
+            return httpClient.execute(request);
 
         } catch (Exception e) {
-            ExtentReport.node.fail("POST request failed");
-            throw new RuntimeException(e);
+            throw new RuntimeException("POST request failed", e);
         }
-
-        return response;
     }
 
     /* ============================
@@ -206,9 +187,8 @@ public class HttpClient implements ISystemProperties {
 
     public HttpResponse DeleteServise(String payload, String type) {
 
-        HttpResponse response;
-
         try {
+
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpDelete request;
 
@@ -224,14 +204,11 @@ public class HttpClient implements ISystemProperties {
 
             request.setHeader("Content-type", "application/json");
 
-            response = httpClient.execute(request);
+            return httpClient.execute(request);
 
         } catch (Exception e) {
-            ExtentReport.node.fail("DELETE request failed");
-            throw new RuntimeException(e);
+            throw new RuntimeException("DELETE request failed", e);
         }
-
-        return response;
     }
 
     /* ============================
