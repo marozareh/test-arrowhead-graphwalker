@@ -1,6 +1,8 @@
 package com.mbtroads.ai;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -11,8 +13,18 @@ public class DeepModelLLM {
                                  int unreachable,
                                  int selfLoops) throws Exception {
 
+        // ================= PROMPT =================
+
         String prompt =
                 "You are a senior Model-Based Testing architect.\n\n" +
+
+                        "Provide a professional structural risk analysis.\n" +
+                        "Respond in structured readable sections.\n" +
+                        "Use bullet points starting with '-'.\n" +
+                        "No markdown formatting.\n" +
+                        "No bold.\n" +
+                        "No asterisks.\n\n" +
+
                         "Model: " + snapshot.modelName + "\n" +
                         "Total Vertices: " + snapshot.totalVertices + "\n" +
                         "Total Edges: " + snapshot.totalEdges + "\n" +
@@ -21,7 +33,18 @@ public class DeepModelLLM {
                         "Has Cycle: " + hasCycle + "\n" +
                         "Unreachable Vertices: " + unreachable + "\n" +
                         "Self Loops: " + selfLoops + "\n\n" +
-                        "Provide structural risk assessment and improvement suggestions.";
+
+                        "Structure the answer exactly as:\n" +
+                        "Structural Risk Assessment:\n" +
+                        "- ...\n\n" +
+                        "Identified Risks:\n" +
+                        "- ...\n\n" +
+                        "Improvement Suggestions:\n" +
+                        "- ...\n\n" +
+                        "Testing Recommendations:\n" +
+                        "- ...\n";
+
+        // ================= HTTP CALL =================
 
         URL url = new URL("http://localhost:11434/api/generate");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -30,8 +53,9 @@ public class DeepModelLLM {
         conn.setDoOutput(true);
         conn.setRequestProperty("Content-Type", "application/json");
 
-        String safePrompt =
-                prompt.replace("\"", "\\\"").replace("\n", "\\n");
+        String safePrompt = prompt
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n");
 
         String body =
                 "{"
@@ -45,13 +69,12 @@ public class DeepModelLLM {
         }
 
         if (conn.getResponseCode() != 200) {
-            throw new RuntimeException("LLM HTTP error");
+            throw new RuntimeException("LLM HTTP error: " + conn.getResponseCode());
         }
 
-        BufferedReader br =
-                new BufferedReader(
-                        new InputStreamReader(conn.getInputStream())
-                );
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(conn.getInputStream())
+        );
 
         StringBuilder response = new StringBuilder();
         String line;
@@ -62,16 +85,38 @@ public class DeepModelLLM {
 
         conn.disconnect();
 
+        // ================= JSON EXTRACTION =================
+
         String json = response.toString();
 
         int start = json.indexOf("\"response\":\"");
         int end = json.indexOf("\",\"done\":");
 
-        if (start != -1 && end != -1) {
-            return json.substring(start + 12, end)
-                    .replace("\\n", "\n");
+        if (start == -1 || end == -1) {
+            return "LLM returned unexpected format.";
         }
 
-        return "Unexpected LLM format.";
+        String result = json.substring(start + 12, end);
+
+        // ================= CLEAN OUTPUT =================
+
+        result = result
+                .replace("\\n", "\n")
+                .replace("\\t", "")
+                .replace("\\\"", "\"");
+
+        // Remove markdown leftovers
+        result = result
+                .replace("**", "")
+                .replace("* ", "- ")
+                .replace("+ ", "- ");
+
+        // Ensure bullets start on new lines
+        result = result.replaceAll("(?m)^\\s*-", "\n-");
+
+        // Clean excessive blank lines
+        result = result.replaceAll("\\n{3,}", "\n\n");
+
+        return result.trim();
     }
 }

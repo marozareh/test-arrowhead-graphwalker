@@ -1,0 +1,2820 @@
+openapi: 3.0.1
+info:
+  contact:
+    name: Arrowhead Consortia
+    url: https://github.com/eclipse-arrowhead
+  description: This page shows the REST interfaces offered by the Service Registry
+    Core System.
+  license: {}
+  title: Arrowhead Service Registry Core System API
+servers:
+- url: //localhost:8443/
+tags:
+- name: All
+- name: Client
+- name: Management
+- name: Private
+paths:
+  /serviceregistry/echo:
+    get:
+      deprecated: false
+      operationId: echoServiceUsingGET
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Core service is available
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return an echo message with the purpose of testing the core service
+        availability
+      tags:
+      - Client
+      - All
+      x-accepts:
+      - '*/*'
+  /serviceregistry/mgmt:
+    get:
+      deprecated: false
+      operationId: getServiceRegistryEntriesUsingGET
+      parameters:
+      - description: direction
+        in: query
+        name: direction
+        schema:
+          default: ASC
+          type: string
+      - description: item_per_page
+        in: query
+        name: item_per_page
+        schema:
+          format: int32
+          type: integer
+      - description: page
+        in: query
+        name: page
+        schema:
+          format: int32
+          type: integer
+      - description: sort_field
+        in: query
+        name: sort_field
+        schema:
+          default: id
+          type: string
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryListResponseDTO'
+          description: Service Registry entries returned
+        "400":
+          content: {}
+          description: Could not retrieve service registry entries
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested service registry entries by the given parameters
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - '*/*'
+    post:
+      deprecated: false
+      operationId: addServiceRegistryUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRegistryRequestDTO'
+        description: request
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          description: Service registered
+        "400":
+          content: {}
+          description: Could not register service
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Registers a service
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/grouped:
+    get:
+      deprecated: false
+      operationId: getServiceRegistryGroupedDataUsingGET
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryGroupedResponseDTO'
+          description: Service Registry entries returned
+        "400":
+          content: {}
+          description: Could not retrieve service registry entries
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return all service registry entries grouped for frontend usage
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - '*/*'
+  /serviceregistry/mgmt/interfaces:
+    get:
+      deprecated: false
+      operationId: getServiceInterfacesUsingGET
+      parameters:
+      - description: direction
+        in: query
+        name: direction
+        schema:
+          default: ASC
+          type: string
+      - description: item_per_page
+        in: query
+        name: item_per_page
+        schema:
+          format: int32
+          type: integer
+      - description: page
+        in: query
+        name: page
+        schema:
+          format: int32
+          type: integer
+      - description: sort_field
+        in: query
+        name: sort_field
+        schema:
+          default: id
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInterfacesListResponseDTO'
+          description: Service Interfaces returned
+        "400":
+          content: {}
+          description: Could not retrieve service interface
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested service interfaces by the given parameters
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    post:
+      deprecated: false
+      operationId: addServiceInterfaceUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInterfaceRequestDTO'
+        description: serviceInterfaceRequestDTO
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInterfaceResponseDTO'
+          description: Service interface created
+        "400":
+          content: {}
+          description: Could not create service interface
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return created service interface
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: serviceInterfaceRequestDTO
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/interfaces/{id}:
+    delete:
+      deprecated: false
+      operationId: removeServiceInterfaceUsingDELETE
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content: {}
+          description: Service interface removed
+        "400":
+          content: {}
+          description: Could not remove service interface
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Remove service interface
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    get:
+      deprecated: false
+      operationId: getServiceInterfaceByIdUsingGET
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInterfaceResponseDTO'
+          description: Service Interfaces returned
+        "400":
+          content: {}
+          description: Could not retrieve service interface
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested service interface
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    patch:
+      deprecated: false
+      operationId: patchUpdateServiceInterfaceUsingPATCH
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInterfaceRequestDTO'
+        description: serviceInterfaceRequestDTO
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInterfaceResponseDTO'
+          description: Service interface updated
+        "400":
+          content: {}
+          description: Could not update service interface
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return updated service interface
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: serviceInterfaceRequestDTO
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+    put:
+      deprecated: false
+      operationId: putUpdateServiceInterfaceUsingPUT
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInterfaceRequestDTO'
+        description: serviceInterfaceRequestDTO
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInterfaceResponseDTO'
+          description: Service interface updated
+        "400":
+          content: {}
+          description: Could not update service interface
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return updated service interface
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: serviceInterfaceRequestDTO
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/logs:
+    get:
+      deprecated: false
+      operationId: getLogEntriesUsingGET
+      parameters:
+      - description: direction
+        in: query
+        name: direction
+        schema:
+          default: ASC
+          type: string
+      - description: from
+        in: query
+        name: from
+        schema:
+          type: string
+      - description: item_per_page
+        in: query
+        name: item_per_page
+        schema:
+          format: int32
+          type: integer
+      - description: level
+        in: query
+        name: level
+        schema:
+          type: string
+      - description: logger
+        in: query
+        name: logger
+        schema:
+          type: string
+      - description: page
+        in: query
+        name: page
+        schema:
+          format: int32
+          type: integer
+      - description: sort_field
+        in: query
+        name: sort_field
+        schema:
+          default: logId
+          type: string
+      - description: to
+        in: query
+        name: to
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogEntryListResponseDTO'
+          description: Log entries returned.
+        "400":
+          content: {}
+          description: Invalid parameters.
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested log entries by the given parameters
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/servicedef/{serviceDefinition}:
+    get:
+      deprecated: false
+      operationId: getServiceRegistryEntriesByServiceDefinitionUsingGET
+      parameters:
+      - description: direction
+        in: query
+        name: direction
+        schema:
+          default: ASC
+          type: string
+      - description: item_per_page
+        in: query
+        name: item_per_page
+        schema:
+          format: int32
+          type: integer
+      - description: page
+        in: query
+        name: page
+        schema:
+          format: int32
+          type: integer
+      - description: serviceDefinition
+        in: path
+        name: serviceDefinition
+        required: true
+        schema:
+          type: string
+      - description: sort_field
+        in: query
+        name: sort_field
+        schema:
+          default: id
+          type: string
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryListResponseDTO'
+          description: Service Registry entries returned
+        "400":
+          content: {}
+          description: Could not retrieve service registry entries
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested service registry entries by service definition based
+        on the given parameters
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - '*/*'
+  /serviceregistry/mgmt/services:
+    get:
+      deprecated: false
+      operationId: getServiceDefinitionsUsingGET
+      parameters:
+      - description: direction
+        in: query
+        name: direction
+        schema:
+          default: ASC
+          type: string
+      - description: item_per_page
+        in: query
+        name: item_per_page
+        schema:
+          format: int32
+          type: integer
+      - description: page
+        in: query
+        name: page
+        schema:
+          format: int32
+          type: integer
+      - description: sort_field
+        in: query
+        name: sort_field
+        schema:
+          default: id
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDefinitionsListResponseDTO'
+          description: Services returned
+        "400":
+          content: {}
+          description: Could not retrieve service definition
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested service definitions by the given parameters
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    post:
+      deprecated: false
+      operationId: addServiceDefinitionUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceDefinitionRequestDTO'
+        description: serviceDefinitionRequestDTO
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDefinitionResponseDTO'
+          description: Service definition created
+        "400":
+          content: {}
+          description: Could not create service definition
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return created service definition
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: serviceDefinitionRequestDTO
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/services/{id}:
+    delete:
+      deprecated: false
+      operationId: removeServiceDefinitionUsingDELETE
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content: {}
+          description: Service definition removed
+        "400":
+          content: {}
+          description: Could not remove service definition
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Remove service definition
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    get:
+      deprecated: false
+      operationId: getServiceDefinitionByIdUsingGET
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDefinitionResponseDTO'
+          description: Services returned
+        "400":
+          content: {}
+          description: Could not retrieve service definition
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested service definition
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    patch:
+      deprecated: false
+      operationId: patchUpdateServiceDefinitionUsingPATCH
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceDefinitionRequestDTO'
+        description: serviceDefinitionRequestDTO
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDefinitionResponseDTO'
+          description: Service definition updated
+        "400":
+          content: {}
+          description: Could not update service definition
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return updated service definition
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: serviceDefinitionRequestDTO
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+    put:
+      deprecated: false
+      operationId: putUpdateServiceDefinitionUsingPUT
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceDefinitionRequestDTO'
+        description: serviceDefinitionRequestDTO
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDefinitionResponseDTO'
+          description: Service definition updated
+        "400":
+          content: {}
+          description: Could not update service definition
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return updated service definition
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: serviceDefinitionRequestDTO
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/systems:
+    get:
+      deprecated: false
+      operationId: getSystemsUsingGET
+      parameters:
+      - description: direction
+        in: query
+        name: direction
+        schema:
+          default: ASC
+          type: string
+      - description: item_per_page
+        in: query
+        name: item_per_page
+        schema:
+          format: int32
+          type: integer
+      - description: page
+        in: query
+        name: page
+        schema:
+          format: int32
+          type: integer
+      - description: sort_field
+        in: query
+        name: sort_field
+        schema:
+          default: id
+          type: string
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SystemListResponseDTO'
+          description: Systems returned
+        "400":
+          content: {}
+          description: ' Invalid parameters'
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return systems by request parameters
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - '*/*'
+    post:
+      deprecated: false
+      operationId: addSystemUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemRequestDTO'
+        description: request
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: System created
+        "400":
+          content: {}
+          description: Could not create system
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: 'Return created system '
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/systems/{id}:
+    delete:
+      deprecated: false
+      operationId: removeSystemUsingDELETE
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content: {}
+          description: System deleted
+        "400":
+          content: {}
+          description: Could not delete system
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Remove system
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    get:
+      deprecated: false
+      operationId: getSystemByIdUsingGET
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: System by requested id returned
+        "400":
+          content: {}
+          description: No Such System by requested id
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return system by id
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - '*/*'
+    patch:
+      deprecated: false
+      operationId: mergeSystemUsingPATCH
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemRequestDTO'
+        description: request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: OK
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: System updated
+        "400":
+          content: {}
+          description: Could not update system
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return system  updated by fields
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+    put:
+      deprecated: false
+      operationId: updateSystemUsingPUT
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemRequestDTO'
+        description: request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: OK
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: System updated
+        "400":
+          content: {}
+          description: Could not update system
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: 'Return updated system '
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/mgmt/{id}:
+    delete:
+      deprecated: false
+      operationId: removeServiceRegistryEntryByIdUsingDELETE
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content: {}
+          description: Service Registry entry removed
+        "400":
+          content: {}
+          description: Could not remove service registry entry
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Remove the specified service registry entry
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - application/json
+    get:
+      deprecated: false
+      operationId: getServiceRegistryEntryByIdUsingGET
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          description: Service Registry entries returned
+        "400":
+          content: {}
+          description: Could not retrieve service registry entries
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return requested service registry entry
+      tags:
+      - Management
+      - All
+      x-accepts:
+      - '*/*'
+    patch:
+      deprecated: false
+      operationId: mergeServiceRegistryUsingPATCH
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRegistryRequestDTO'
+        description: request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          description: Service merged
+        "400":
+          content: {}
+          description: Could not merge service
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Merge/Patch a service
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+    put:
+      deprecated: false
+      operationId: updateServiceRegistryUsingPUT
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRegistryRequestDTO'
+        description: request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          description: Service updated
+        "400":
+          content: {}
+          description: Could not update service
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Update a service
+      tags:
+      - Management
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/pull-config:
+    get:
+      deprecated: false
+      operationId: pullConfigUsingGET
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyValuesDTO'
+          description: Configuration returned
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return some configuration of ServiceRegistry
+      tags:
+      - Private
+      - All
+      x-accepts:
+      - application/json
+  /serviceregistry/pull-systems:
+    get:
+      deprecated: false
+      operationId: pullSystemsUsingGET
+      parameters:
+      - description: direction
+        in: query
+        name: direction
+        schema:
+          default: ASC
+          type: string
+      - description: item_per_page
+        in: query
+        name: item_per_page
+        schema:
+          format: int32
+          type: integer
+      - description: page
+        in: query
+        name: page
+        schema:
+          format: int32
+          type: integer
+      - description: sort_field
+        in: query
+        name: sort_field
+        schema:
+          default: id
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemListResponseDTO'
+          description: Systems returned
+        "400":
+          content: {}
+          description: ' Invalid parameters'
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return systems by request parameters
+      tags:
+      - Private
+      - All
+      x-accepts:
+      - application/json
+  /serviceregistry/query:
+    post:
+      deprecated: false
+      operationId: queryRegistryUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceQueryFormDTO'
+        description: form
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceQueryResultDTO'
+          description: Service Registry data returned
+        "400":
+          content: {}
+          description: Could not query Service Registry
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return Service Registry data that fits the specification
+      tags:
+      - Client
+      - All
+      x-codegen-request-body-name: form
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/query/all:
+    get:
+      deprecated: false
+      operationId: getServiceRegistryEntriesUsingGET_1
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryListResponseDTO'
+          description: Service Registry entries returned
+        "400":
+          content: {}
+          description: Could not retrieve service registry entries
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return all service registry entries
+      tags:
+      - Private
+      - All
+      x-accepts:
+      - '*/*'
+  /serviceregistry/query/definition:
+    post:
+      deprecated: false
+      operationId: queryServiceRegistryEntriesByServiceDefinitionListUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+              type: array
+        description: request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryListResponseDTO'
+          description: Service Registry entries returned
+        "400":
+          content: {}
+          description: Could not retrieve service registry entries
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return service registry entries by service definition list
+      tags:
+      - Private
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/query/multi:
+    post:
+      deprecated: false
+      operationId: multiQueryRegistryUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceQueryFormListDTO'
+        description: forms
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceQueryResultDTO'
+          description: Service Registry data returned
+        "400":
+          content: {}
+          description: Could not query Service Registry
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return Service Registry data that fits the specification
+      tags:
+      - Client
+      - All
+      x-codegen-request-body-name: forms
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/query/provider/{id}:
+    get:
+      deprecated: false
+      operationId: getServiceRegistryEntriesBySystemIdUsingGET
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryListResponseDTO'
+          description: Service Registry entries returned
+        "400":
+          content: {}
+          description: Could not retrieve service registry entries
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return service registry entries by system id
+      tags:
+      - Private
+      - All
+      x-accepts:
+      - application/json
+  /serviceregistry/query/system:
+    post:
+      deprecated: false
+      operationId: queryRegistryBySystemDTOUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemRequestDTO'
+        description: request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: Consumer System data by requestDTO returned
+        "400":
+          content: {}
+          description: Could not query Service Registry by Consumer system requestDTO
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return System by requested dto
+      tags:
+      - Private
+      - All
+      x-codegen-request-body-name: request
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/query/system/{id}:
+    get:
+      deprecated: false
+      operationId: queryRegistryBySystemIdUsingGET
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: System data by id returned
+        "400":
+          content: {}
+          description: Could not query Service Registry by Consumer system id
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Return system by requested id
+      tags:
+      - Private
+      - All
+      x-accepts:
+      - application/json
+  /serviceregistry/register:
+    post:
+      deprecated: false
+      operationId: registerServiceUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRegistryRequestDTO'
+        description: dto
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          description: Service registered
+        "400":
+          content: {}
+          description: Could not register service
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Registers a service
+      tags:
+      - Client
+      - All
+      x-codegen-request-body-name: dto
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/register-system:
+    post:
+      deprecated: false
+      operationId: registerSystemUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemRequestDTO'
+        description: dto
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemResponseDTO'
+          description: System created
+        "400":
+          content: {}
+          description: Could not create system
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: 'Return created application system '
+      tags:
+      - Client
+      - All
+      x-codegen-request-body-name: dto
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /serviceregistry/unregister:
+    delete:
+      deprecated: false
+      operationId: unregisterServiceUsingDELETE
+      parameters:
+      - description: address
+        in: query
+        name: address
+        schema:
+          type: string
+      - description: port
+        in: query
+        name: port
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: service_definition
+        in: query
+        name: service_definition
+        required: true
+        schema:
+          type: string
+      - description: service_uri
+        in: query
+        name: service_uri
+        required: true
+        schema:
+          type: string
+      - description: system_name
+        in: query
+        name: system_name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: Registered service removed
+        "400":
+          content: {}
+          description: Could not remove service
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Remove a registered service
+      tags:
+      - Client
+      - All
+      x-accepts:
+      - application/json
+  /serviceregistry/unregister-system:
+    delete:
+      deprecated: false
+      operationId: unregisterSystemUsingDELETE
+      parameters:
+      - description: address
+        in: query
+        name: address
+        schema:
+          type: string
+      - description: port
+        in: query
+        name: port
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: system_name
+        in: query
+        name: system_name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: System deleted
+        "400":
+          content: {}
+          description: Could not delete system
+        "401":
+          content: {}
+          description: You are not authorized
+        "500":
+          content: {}
+          description: Core service is not available
+      summary: Unregister the given system
+      tags:
+      - Client
+      - All
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    AutoCompleteDataResponseDTO:
+      example:
+        systemList:
+        - createdAt: createdAt
+          authenticationInfo: authenticationInfo
+          metadata:
+            key: metadata
+          address: address
+          systemName: systemName
+          port: 5
+          id: 5
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          authenticationInfo: authenticationInfo
+          metadata:
+            key: metadata
+          address: address
+          systemName: systemName
+          port: 5
+          id: 5
+          updatedAt: updatedAt
+        serviceList:
+        - id: 0
+          value: value
+        - id: 0
+          value: value
+        interfaceList:
+        - id: 0
+          value: value
+        - id: 0
+          value: value
+      properties:
+        interfaceList:
+          items:
+            $ref: '#/components/schemas/IdValueDTO'
+          type: array
+        serviceList:
+          items:
+            $ref: '#/components/schemas/IdValueDTO'
+          type: array
+        systemList:
+          items:
+            $ref: '#/components/schemas/SystemResponseDTO'
+          type: array
+      title: AutoCompleteDataResponseDTO
+      type: object
+    IdValueDTO:
+      example:
+        id: 0
+        value: value
+      properties:
+        id:
+          format: int64
+          type: integer
+        value:
+          type: string
+      title: IdValueDTO
+      type: object
+    KeyValuesDTO:
+      example:
+        map:
+          key: map
+      properties:
+        map:
+          additionalProperties:
+            type: string
+          type: object
+      title: KeyValuesDTO
+      type: object
+    LogEntryDTO:
+      example:
+        exception: exception
+        logLevel: logLevel
+        systemName: systemName
+        entryDate: entryDate
+        logger: logger
+        logId: logId
+        message: message
+      properties:
+        entryDate:
+          type: string
+        exception:
+          type: string
+        logId:
+          type: string
+        logLevel:
+          type: string
+        logger:
+          type: string
+        message:
+          type: string
+        systemName:
+          type: string
+      title: LogEntryDTO
+      type: object
+    LogEntryListResponseDTO:
+      example:
+        data:
+        - exception: exception
+          logLevel: logLevel
+          systemName: systemName
+          entryDate: entryDate
+          logger: logger
+          logId: logId
+          message: message
+        - exception: exception
+          logLevel: logLevel
+          systemName: systemName
+          entryDate: entryDate
+          logger: logger
+          logId: logId
+          message: message
+        count: 0
+      properties:
+        count:
+          format: int64
+          type: integer
+        data:
+          items:
+            $ref: '#/components/schemas/LogEntryDTO'
+          type: array
+      title: LogEntryListResponseDTO
+      type: object
+    ServiceDefinitionRequestDTO:
+      example:
+        serviceDefinition: serviceDefinition
+      properties:
+        serviceDefinition:
+          type: string
+      title: ServiceDefinitionRequestDTO
+      type: object
+    ServiceDefinitionResponseDTO:
+      example:
+        createdAt: createdAt
+        serviceDefinition: serviceDefinition
+        id: 2
+        updatedAt: updatedAt
+      properties:
+        createdAt:
+          type: string
+        id:
+          format: int64
+          type: integer
+        serviceDefinition:
+          type: string
+        updatedAt:
+          type: string
+      title: ServiceDefinitionResponseDTO
+      type: object
+    ServiceDefinitionsListResponseDTO:
+      example:
+        data:
+        - createdAt: createdAt
+          serviceDefinition: serviceDefinition
+          id: 2
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          serviceDefinition: serviceDefinition
+          id: 2
+          updatedAt: updatedAt
+        count: 0
+      properties:
+        count:
+          format: int64
+          type: integer
+        data:
+          items:
+            $ref: '#/components/schemas/ServiceDefinitionResponseDTO'
+          type: array
+      title: ServiceDefinitionsListResponseDTO
+      type: object
+    ServiceInterfaceRequestDTO:
+      example:
+        interfaceName: interfaceName
+      properties:
+        interfaceName:
+          type: string
+      title: ServiceInterfaceRequestDTO
+      type: object
+    ServiceInterfaceResponseDTO:
+      example:
+        createdAt: createdAt
+        id: 1
+        interfaceName: interfaceName
+        updatedAt: updatedAt
+      properties:
+        createdAt:
+          type: string
+        id:
+          format: int64
+          type: integer
+        interfaceName:
+          type: string
+        updatedAt:
+          type: string
+      title: ServiceInterfaceResponseDTO
+      type: object
+    ServiceInterfacesListResponseDTO:
+      example:
+        data:
+        - createdAt: createdAt
+          id: 1
+          interfaceName: interfaceName
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          id: 1
+          interfaceName: interfaceName
+          updatedAt: updatedAt
+        count: 0
+      properties:
+        count:
+          format: int64
+          type: integer
+        data:
+          items:
+            $ref: '#/components/schemas/ServiceInterfaceResponseDTO'
+          type: array
+      title: ServiceInterfacesListResponseDTO
+      type: object
+    ServiceQueryFormDTO:
+      example:
+        providerAddressTypeRequirements:
+        - HOSTNAME
+        - HOSTNAME
+        maxVersionRequirement: 0
+        metadataRequirements:
+          key: metadataRequirements
+        securityRequirements:
+        - NOT_SECURE
+        - NOT_SECURE
+        serviceDefinitionRequirement: serviceDefinitionRequirement
+        versionRequirement: 1
+        interfaceRequirements:
+        - interfaceRequirements
+        - interfaceRequirements
+        minVersionRequirement: 6
+        pingProviders: true
+      properties:
+        interfaceRequirements:
+          items:
+            type: string
+          type: array
+        maxVersionRequirement:
+          format: int32
+          type: integer
+        metadataRequirements:
+          additionalProperties:
+            type: string
+          type: object
+        minVersionRequirement:
+          format: int32
+          type: integer
+        pingProviders:
+          type: boolean
+        providerAddressTypeRequirements:
+          items:
+            enum:
+            - HOSTNAME
+            - IPV4
+            - IPV6
+            type: string
+          type: array
+        securityRequirements:
+          items:
+            enum:
+            - NOT_SECURE
+            - CERTIFICATE
+            - TOKEN
+            type: string
+          type: array
+        serviceDefinitionRequirement:
+          type: string
+        versionRequirement:
+          format: int32
+          type: integer
+      title: ServiceQueryFormDTO
+      type: object
+    ServiceQueryFormListDTO:
+      example:
+        forms:
+        - providerAddressTypeRequirements:
+          - HOSTNAME
+          - HOSTNAME
+          maxVersionRequirement: 0
+          metadataRequirements:
+            key: metadataRequirements
+          securityRequirements:
+          - NOT_SECURE
+          - NOT_SECURE
+          serviceDefinitionRequirement: serviceDefinitionRequirement
+          versionRequirement: 1
+          interfaceRequirements:
+          - interfaceRequirements
+          - interfaceRequirements
+          minVersionRequirement: 6
+          pingProviders: true
+        - providerAddressTypeRequirements:
+          - HOSTNAME
+          - HOSTNAME
+          maxVersionRequirement: 0
+          metadataRequirements:
+            key: metadataRequirements
+          securityRequirements:
+          - NOT_SECURE
+          - NOT_SECURE
+          serviceDefinitionRequirement: serviceDefinitionRequirement
+          versionRequirement: 1
+          interfaceRequirements:
+          - interfaceRequirements
+          - interfaceRequirements
+          minVersionRequirement: 6
+          pingProviders: true
+      properties:
+        forms:
+          items:
+            $ref: '#/components/schemas/ServiceQueryFormDTO'
+          type: array
+      title: ServiceQueryFormListDTO
+      type: object
+    ServiceQueryResultDTO:
+      example:
+        serviceQueryData:
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+        unfilteredHits: 0
+      properties:
+        serviceQueryData:
+          items:
+            $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          type: array
+        unfilteredHits:
+          format: int32
+          type: integer
+      title: ServiceQueryResultDTO
+      type: object
+    ServiceQueryResultListDTO:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/ServiceQueryResultDTO'
+          type: array
+      title: ServiceQueryResultListDTO
+      type: object
+    ServiceRegistryGroupedResponseDTO:
+      example:
+        servicesGroupedBySystems:
+        - metadata:
+            key: metadata
+          systemId: 5
+          address: address
+          systemName: systemName
+          port: 1
+          services:
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+        - metadata:
+            key: metadata
+          systemId: 5
+          address: address
+          systemName: systemName
+          port: 1
+          services:
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+        autoCompleteData:
+          systemList:
+          - createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceList:
+          - id: 0
+            value: value
+          - id: 0
+            value: value
+          interfaceList:
+          - id: 0
+            value: value
+          - id: 0
+            value: value
+        servicesGroupedByServiceDefinition:
+        - providerServices:
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+          serviceDefinition: serviceDefinition
+          serviceDefinitionId: 6
+        - providerServices:
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            interfaces:
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            - createdAt: createdAt
+              id: 1
+              interfaceName: interfaceName
+              updatedAt: updatedAt
+            metadata:
+              key: metadata
+            provider:
+              createdAt: createdAt
+              authenticationInfo: authenticationInfo
+              metadata:
+                key: metadata
+              address: address
+              systemName: systemName
+              port: 5
+              id: 5
+              updatedAt: updatedAt
+            serviceUri: serviceUri
+            serviceDefinition:
+              createdAt: createdAt
+              serviceDefinition: serviceDefinition
+              id: 2
+              updatedAt: updatedAt
+            endOfValidity: endOfValidity
+            id: 6
+            secure: NOT_SECURE
+            version: 7
+            updatedAt: updatedAt
+          serviceDefinition: serviceDefinition
+          serviceDefinitionId: 6
+      properties:
+        autoCompleteData:
+          $ref: '#/components/schemas/AutoCompleteDataResponseDTO'
+        servicesGroupedByServiceDefinition:
+          items:
+            $ref: '#/components/schemas/ServicesGroupedByServiceDefinitionResponseDTO'
+          type: array
+        servicesGroupedBySystems:
+          items:
+            $ref: '#/components/schemas/ServicesGroupedBySystemsResponseDTO'
+          type: array
+      title: ServiceRegistryGroupedResponseDTO
+      type: object
+    ServiceRegistryListResponseDTO:
+      example:
+        data:
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+        count: 0
+      properties:
+        count:
+          format: int64
+          type: integer
+        data:
+          items:
+            $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          type: array
+      title: ServiceRegistryListResponseDTO
+      type: object
+    ServiceRegistryRequestDTO:
+      example:
+        interfaces:
+        - interfaces
+        - interfaces
+        metadata:
+          key: metadata
+        serviceUri: serviceUri
+        serviceDefinition: serviceDefinition
+        endOfValidity: endOfValidity
+        providerSystem:
+          authenticationInfo: authenticationInfo
+          metadata:
+            key: metadata
+          address: address
+          systemName: systemName
+          port: 0
+        secure: secure
+        version: 6
+      properties:
+        endOfValidity:
+          type: string
+        interfaces:
+          items:
+            type: string
+          type: array
+        metadata:
+          additionalProperties:
+            type: string
+          type: object
+        providerSystem:
+          $ref: '#/components/schemas/SystemRequestDTO'
+        secure:
+          type: string
+        serviceDefinition:
+          type: string
+        serviceUri:
+          type: string
+        version:
+          format: int32
+          type: integer
+      title: ServiceRegistryRequestDTO
+      type: object
+    ServiceRegistryResponseDTO:
+      example:
+        createdAt: createdAt
+        interfaces:
+        - createdAt: createdAt
+          id: 1
+          interfaceName: interfaceName
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          id: 1
+          interfaceName: interfaceName
+          updatedAt: updatedAt
+        metadata:
+          key: metadata
+        provider:
+          createdAt: createdAt
+          authenticationInfo: authenticationInfo
+          metadata:
+            key: metadata
+          address: address
+          systemName: systemName
+          port: 5
+          id: 5
+          updatedAt: updatedAt
+        serviceUri: serviceUri
+        serviceDefinition:
+          createdAt: createdAt
+          serviceDefinition: serviceDefinition
+          id: 2
+          updatedAt: updatedAt
+        endOfValidity: endOfValidity
+        id: 6
+        secure: NOT_SECURE
+        version: 7
+        updatedAt: updatedAt
+      properties:
+        createdAt:
+          type: string
+        endOfValidity:
+          type: string
+        id:
+          format: int64
+          type: integer
+        interfaces:
+          items:
+            $ref: '#/components/schemas/ServiceInterfaceResponseDTO'
+          type: array
+        metadata:
+          additionalProperties:
+            type: string
+          type: object
+        provider:
+          $ref: '#/components/schemas/SystemResponseDTO'
+        secure:
+          enum:
+          - NOT_SECURE
+          - CERTIFICATE
+          - TOKEN
+          type: string
+        serviceDefinition:
+          $ref: '#/components/schemas/ServiceDefinitionResponseDTO'
+        serviceUri:
+          type: string
+        updatedAt:
+          type: string
+        version:
+          format: int32
+          type: integer
+      title: ServiceRegistryResponseDTO
+      type: object
+    ServicesGroupedByServiceDefinitionResponseDTO:
+      example:
+        providerServices:
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+        serviceDefinition: serviceDefinition
+        serviceDefinitionId: 6
+      properties:
+        providerServices:
+          items:
+            $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          type: array
+        serviceDefinition:
+          type: string
+        serviceDefinitionId:
+          format: int64
+          type: integer
+      title: ServicesGroupedByServiceDefinitionResponseDTO
+      type: object
+    ServicesGroupedBySystemsResponseDTO:
+      example:
+        metadata:
+          key: metadata
+        systemId: 5
+        address: address
+        systemName: systemName
+        port: 1
+        services:
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          interfaces:
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          - createdAt: createdAt
+            id: 1
+            interfaceName: interfaceName
+            updatedAt: updatedAt
+          metadata:
+            key: metadata
+          provider:
+            createdAt: createdAt
+            authenticationInfo: authenticationInfo
+            metadata:
+              key: metadata
+            address: address
+            systemName: systemName
+            port: 5
+            id: 5
+            updatedAt: updatedAt
+          serviceUri: serviceUri
+          serviceDefinition:
+            createdAt: createdAt
+            serviceDefinition: serviceDefinition
+            id: 2
+            updatedAt: updatedAt
+          endOfValidity: endOfValidity
+          id: 6
+          secure: NOT_SECURE
+          version: 7
+          updatedAt: updatedAt
+      properties:
+        address:
+          type: string
+        metadata:
+          additionalProperties:
+            type: string
+          type: object
+        port:
+          format: int32
+          type: integer
+        services:
+          items:
+            $ref: '#/components/schemas/ServiceRegistryResponseDTO'
+          type: array
+        systemId:
+          format: int64
+          type: integer
+        systemName:
+          type: string
+      title: ServicesGroupedBySystemsResponseDTO
+      type: object
+    SystemListResponseDTO:
+      example:
+        data:
+        - createdAt: createdAt
+          authenticationInfo: authenticationInfo
+          metadata:
+            key: metadata
+          address: address
+          systemName: systemName
+          port: 5
+          id: 5
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          authenticationInfo: authenticationInfo
+          metadata:
+            key: metadata
+          address: address
+          systemName: systemName
+          port: 5
+          id: 5
+          updatedAt: updatedAt
+        count: 0
+      properties:
+        count:
+          format: int64
+          type: integer
+        data:
+          items:
+            $ref: '#/components/schemas/SystemResponseDTO'
+          type: array
+      title: SystemListResponseDTO
+      type: object
+    SystemRequestDTO:
+      example:
+        authenticationInfo: authenticationInfo
+        metadata:
+          key: metadata
+        address: address
+        systemName: systemName
+        port: 0
+      properties:
+        address:
+          type: string
+        authenticationInfo:
+          type: string
+        metadata:
+          additionalProperties:
+            type: string
+          type: object
+        port:
+          format: int32
+          type: integer
+        systemName:
+          type: string
+      title: SystemRequestDTO
+      type: object
+    SystemResponseDTO:
+      example:
+        createdAt: createdAt
+        authenticationInfo: authenticationInfo
+        metadata:
+          key: metadata
+        address: address
+        systemName: systemName
+        port: 5
+        id: 5
+        updatedAt: updatedAt
+      properties:
+        address:
+          type: string
+        authenticationInfo:
+          type: string
+        createdAt:
+          type: string
+        id:
+          format: int64
+          type: integer
+        metadata:
+          additionalProperties:
+            type: string
+          type: object
+        port:
+          format: int32
+          type: integer
+        systemName:
+          type: string
+        updatedAt:
+          type: string
+      title: SystemResponseDTO
+      type: object
+x-original-swagger-version: "2.0"
+
