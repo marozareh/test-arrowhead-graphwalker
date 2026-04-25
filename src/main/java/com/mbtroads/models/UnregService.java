@@ -111,6 +111,7 @@ public class UnregService extends BasePage
 
     @Override
     public void e_back_RegisterService() {
+        ExtentReportNEW.createAndGetNodeInstance("Moving Through: e_back_RegisterService");
         flag = false;
     }
 

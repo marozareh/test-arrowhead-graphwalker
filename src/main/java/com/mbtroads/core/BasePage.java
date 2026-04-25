@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class BasePage extends ExecutionContext {
 
-    // 🔥 GLOBAL FAILED STORAGE
+    // GLOBAL FAILED STORAGE
     public static Set<String> failedVertices = new HashSet<>();
     public static Set<String> failedEdges = new HashSet<>();
 
@@ -28,22 +28,21 @@ public abstract class BasePage extends ExecutionContext {
         ExtentReportNEW.createAndGetNodeInstance("GraphWalker Result Summary");
 
         if (result == 0) {
-            ExtentReportNEW.node.pass("Model executed successfully");
+            safePass("Model executed successfully");
         } else {
-            ExtentReportNEW.node.fail("Error in the Model");
+            safeFail("Error in the Model");
         }
 
         while (i < arrSplit.length) {
 
             if (result == 0) {
-
-                ExtentReportNEW.node.pass(arrSplit[i]);
-
+                safePass(arrSplit[i]);
             }
+
             else if (arrSplit[i].contains("vertexName")) {
 
                 if (firstVertex == 0) {
-                    ExtentReportNEW.node.fail("=============> Failed Vertices <=============");
+                    safeFail("=============> Failed Vertices <=============");
                     firstVertex = 1;
                 }
 
@@ -54,21 +53,19 @@ public abstract class BasePage extends ExecutionContext {
                         .replace("]", "")
                         .trim();
 
-                // 🔥 REMOVE "vertexName: " PREFIX IF EXISTS
                 if (temp.contains(":")) {
                     temp = temp.substring(temp.indexOf(":") + 1).trim();
                 }
 
-                ExtentReportNEW.node.fail(temp);
-
+                safeFail(temp);
                 failedVertices.add(temp);
-
                 i++;
             }
+
             else if (arrSplit[i].contains("edgeId")) {
 
                 if (firstEdge == 0) {
-                    ExtentReportNEW.node.fail("=============> Failed Edges <=============");
+                    safeFail("=============> Failed Edges <=============");
                     firstEdge = 1;
                 }
 
@@ -79,15 +76,12 @@ public abstract class BasePage extends ExecutionContext {
                         .replace("]", "")
                         .trim();
 
-                // 🔥 REMOVE "edgeName: " PREFIX IF EXISTS
                 if (temp.contains(":")) {
                     temp = temp.substring(temp.indexOf(":") + 1).trim();
                 }
 
-                ExtentReportNEW.node.fail(temp);
-
+                safeFail(temp);
                 failedEdges.add(temp);
-
                 i++;
             }
 
@@ -95,12 +89,26 @@ public abstract class BasePage extends ExecutionContext {
         }
     }
 
+    // SAFE LOGGING
+
+    private void safePass(String msg) {
+        if (ExtentReportNEW.node != null) {
+            ExtentReportNEW.node.pass(msg);
+        }
+    }
+
+    private void safeFail(String msg) {
+        if (ExtentReportNEW.node != null) {
+            ExtentReportNEW.node.fail(msg);
+        }
+    }
+
     public void assestEqual(String expectedValue, String actualValue) {
         try {
             assertEquals(expectedValue, actualValue);
-            ExtentReportNEW.node.pass("Assertion Equal OK: " + expectedValue);
+            safePass("Assertion Equal OK: " + expectedValue);
         } catch (AssertionError e) {
-            ExtentReportNEW.node.fail("Assertion Equal FAILED: " + expectedValue);
+            safeFail("Assertion Equal FAILED: " + expectedValue);
             throw e;
         }
     }
@@ -108,9 +116,9 @@ public abstract class BasePage extends ExecutionContext {
     public void assestContains(String expectedValue, String actualValue) {
         try {
             Assert.assertTrue(actualValue.contains(expectedValue));
-            ExtentReportNEW.node.pass("Assertion Contains OK: " + expectedValue);
+            safePass("Assertion Contains OK: " + expectedValue);
         } catch (AssertionError e) {
-            ExtentReportNEW.node.fail("Assertion Contains FAILED: " + expectedValue);
+            safeFail("Assertion Contains FAILED: " + expectedValue);
             throw e;
         }
     }
@@ -118,18 +126,83 @@ public abstract class BasePage extends ExecutionContext {
     public void assestdonotContains(String expectedValue, String actualValue) {
         try {
             Assert.assertFalse(actualValue.contains(expectedValue));
-            ExtentReportNEW.node.pass("Assertion Not-Contains OK: " + expectedValue);
+            safePass("Assertion Not-Contains OK: " + expectedValue);
         } catch (AssertionError e) {
-            ExtentReportNEW.node.fail("Assertion Not-Contains FAILED: " + expectedValue);
+            safeFail("Assertion Not-Contains FAILED: " + expectedValue);
             throw e;
         }
     }
 
     public void infoReport(String info) {
-        ExtentReportNEW.node.info(info);
+        if (ExtentReportNEW.node != null) {
+            ExtentReportNEW.node.info(info);
+        }
     }
 
     public void extendReport(String info) {
         ExtentReportNEW.createAndGetNodeInstance(info);
     }
+
+
+
+    public void displayLLMAnalysis(String llmText) {
+
+        if (llmText == null || llmText.trim().isEmpty()) {
+            return;
+        }
+
+        ExtentReportNEW.createAndGetNodeInstance("AI Model Structural Analysis");
+
+        String[] lines = llmText.split("\n");
+
+        for (String line : lines) {
+
+            line = line.trim();
+
+            if (line.isEmpty()) {
+                continue;
+            }
+
+            // SECTION HEADERS
+            if (line.contains("Structural Risk Assessment")) {
+                infoReport("=============> Structural Risk Assessment <=============");
+                continue;
+            }
+
+            if (line.contains("Identified Risks")) {
+                infoReport("=============> Identified Risks <=============");
+                continue;
+            }
+
+            if (line.contains("Improvement Suggestions")) {
+                infoReport("=============> Improvement Suggestions <=============");
+                continue;
+            }
+
+            if (line.contains("Testing Recommendations")) {
+                infoReport("=============> Testing Recommendations <=============");
+                continue;
+            }
+
+            // BULLETS
+            if (line.startsWith("-")) {
+
+                String cleaned = line.replaceFirst("-", "").trim();
+
+                if (cleaned.toLowerCase().contains("risk")) {
+                    infoReport(cleaned);
+                } else {
+                    infoReport(cleaned);
+                }
+            }
+
+            else {
+                infoReport(line);
+            }
+        }
+    }
+
+
+
+
 }
