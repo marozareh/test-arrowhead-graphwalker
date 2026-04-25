@@ -181,8 +181,7 @@ public class CreateDotFileNEW implements ISystemProperties {
 
     /* ========================================================= */
 
-    private static void createPng(String filename,
-                                  String reportFolder) {
+    private static void createPng(String filename, String reportFolder) {
 
         try {
 
@@ -192,26 +191,32 @@ public class CreateDotFileNEW implements ISystemProperties {
             String dotFile =
                     reportsDir + pathSeperator + filename + ".dot";
 
-            String pngFile =
-                    reportsDir + pathSeperator + filename + ".png";
+            String svgFile =
+                    reportsDir + pathSeperator + filename + ".svg";
 
             ProcessBuilder builder = new ProcessBuilder(
                     "dot",
-                    "-Tpng",
+                    "-Tsvg",
                     dotFile,
                     "-o",
-                    pngFile
+                    svgFile
             );
 
             builder.redirectErrorStream(true);
 
             Process process = builder.start();
-            process.waitFor();
 
-            System.out.println("PNG created: " + pngFile);
+            boolean finished = process.waitFor(5, java.util.concurrent.TimeUnit.SECONDS);
+
+            if (!finished) {
+                process.destroyForcibly();
+                System.out.println("SVG generation timeout → skipped");
+            } else {
+                System.out.println("SVG created: " + svgFile);
+            }
 
         } catch (Exception e) {
-            throw new RuntimeException("Graphviz PNG generation failed", e);
+            throw new RuntimeException("Graphviz SVG generation failed", e);
         }
     }
 }
