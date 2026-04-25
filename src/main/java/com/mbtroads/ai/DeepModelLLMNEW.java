@@ -113,7 +113,7 @@ public class DeepModelLLMNEW {
 
     private static String callLLM(String prompt) throws Exception {
 
-        URL url = new URL("http://localhost:11434/api/generate");
+        URL url = new URL("http://127.0.0.1:11434/api/generate");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
         conn.setRequestMethod("POST");
@@ -126,7 +126,7 @@ public class DeepModelLLMNEW {
 
         String body =
                 "{"
-                        + "\"model\":\"llama3:latest\","
+                        + "\"model\":\"phi3\","
                         + "\"prompt\":\"" + safePrompt + "\","
                         + "\"stream\":false,"
                         + "\"options\":{"
@@ -138,23 +138,35 @@ public class DeepModelLLMNEW {
             os.write(body.getBytes("UTF-8"));
         }
 
-        if (conn.getResponseCode() != 200) {
-            throw new RuntimeException("LLM HTTP error: " + conn.getResponseCode());
-        }
+        int status = conn.getResponseCode();
 
-        BufferedReader br =
-                new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        BufferedReader br = (status == 200)
+                ? new BufferedReader(new InputStreamReader(conn.getInputStream()))
+                : new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 
-        StringBuilder response = new StringBuilder();
+        StringBuilder fullText = new StringBuilder();
         String line;
 
         while ((line = br.readLine()) != null) {
-            response.append(line);
+            // each line is a JSON object → extract "response"
+            int start = line.indexOf("\"response\":\"");
+            int end = line.indexOf("\",\"done\":");
+
+            if (start != -1 && end != -1) {
+                String part = line.substring(start + 12, end)
+                        .replace("\\n", "\n")
+                        .replace("\\\"", "\"");
+                fullText.append(part);
+            }
         }
 
         conn.disconnect();
 
-        return extractResponse(response.toString());
+        if (status != 200) {
+            throw new RuntimeException("LLM HTTP error: " + status + " → " + fullText);
+        }
+
+        return fullText.toString().trim();
     }
 
     // =========================================================
